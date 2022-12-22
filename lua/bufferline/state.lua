@@ -35,13 +35,15 @@ local PIN = 'bufferline_pin'
 --- @field width? integer the width of the buffer - invisible characters
 
 --- @class bufferline.state
---- @field is_picking_buffer boolean whether the user is currently in jump-mode
+--- @field is_picking_buffer boolean whether the user is currently in jump-mode.
 --- @field buffers integer[] the open buffers, in visual order.
---- @field buffers_by_id {[integer]: bufferline.state.data} the buffer data
+--- @field buffers_by_id {[integer]: bufferline.state.data} the buffer data.
+--- @field buffers_MRU integer[] the open buffers, in Most Recently Used order.
 local state = {
   is_picking_buffer = false,
   buffers = {},
   buffers_by_id = {},
+  buffers_MRU = {},
 
   --- The offset of the tabline (from the left).
   --- @class bufferline.render.offset
@@ -50,6 +52,15 @@ local state = {
   --- @field width integer the size of the offset
   offset = {text = '', width = 0}
 }
+
+
+--- Update the buffer MRU
+--- @param id integer the newly selected buffer's old index
+function state.update_buffer_MRU(index)
+  local buffer_id = table.remove(state.buffers_MRU, index)
+  table.insert(buffers_MRU, 1, buffer_id)
+end
+
 
 --- Get the state of the `id`
 --- @param id integer the `bufnr`
